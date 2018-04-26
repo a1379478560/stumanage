@@ -11,17 +11,25 @@ class Course(models.Model):
         ('college','大学'),
     )
     #course_id=models.IntegerField(unique=True)
-    name=models.CharField(max_length=128)
-    suit_age=models.CharField(choices=suit_age_choice,max_length=16,default='elementary')
+    name=models.CharField(max_length=128,verbose_name='课程')
+    suit_age=models.CharField(choices=suit_age_choice,max_length=16,default='elementary',verbose_name='适用阶段')
     #price=models.IntegerField(default=0)
     #online_price=models.IntegerField(default=0)
-    notice=models.TextField(blank=True)
+    brief = models.TextField(blank=True, verbose_name='简介')
+    notice=models.TextField(blank=True,verbose_name='备注')
     def __str__(self):
-        return self.name
+        return  self.name
+    class Meta:
+        verbose_name = '课程'
+        verbose_name_plural = '课程'
+
+
+
+
 
 #班次信息
 class ClassList(models.Model):
-    name=models.CharField(max_length=16)
+    name=models.CharField(max_length=16,verbose_name='班次')
     is_online_choice=(
         ('online','在线上课'),
         ('offline','线下上课'),
@@ -32,107 +40,130 @@ class ClassList(models.Model):
         ('part_tim','非全日制')
     )
     #id=models.CharField(default='00',max_length=8)
-#    course=models.ForeignKey('Course',on_delete=)
-    course_type=models.CharField(choices=course_type_choice,default='in_school',max_length=32)
-    is_online=models.CharField(choices=is_online_choice,default='offline',max_length=32)
-    class_hour=models.IntegerField(default=50)
-    capacity=models.IntegerField(default=30)
-    semester=models.IntegerField(default=2)
-    start_date=models.DateField()
-    graduate_date=models.DateField(blank=True,null=True)
-    teachers=models.ForeignKey('TeacherInfo',on_delete=models.PROTECT)
-    notice=models.TextField(max_length=512,blank=True)
+    course=models.ForeignKey('Course',on_delete=models.DO_NOTHING,verbose_name='科目')
+    course_type=models.CharField(choices=course_type_choice,default='in_school',max_length=32,verbose_name='课程类型')
+    is_online=models.CharField(choices=is_online_choice,default='offline',max_length=32,verbose_name='上课方式')
+    class_hour=models.IntegerField(default=50,verbose_name='课时')
+    capacity=models.IntegerField(default=30,verbose_name='最大班容量')
+    semester=models.IntegerField(default=2,verbose_name='学期数')
+    start_date=models.DateField(verbose_name='开班日期')
+    graduate_date=models.DateField(blank=True,null=True,verbose_name='毕业日期')
+    teacher=models.ForeignKey('TeacherInfo',on_delete=models.PROTECT,verbose_name='任课老师')
+    notice=models.TextField(max_length=512,blank=True,verbose_name='备注')
     def __str__(self):
        return "%s(%s)" %(self.name,self.course_type)
+    class Meta:
+        verbose_name = '班次'
+        verbose_name_plural = '班次'
+
+
 
 
 #学生信息
 class StuInfo(models.Model):
-    name=models.CharField(max_length=32,blank=True)
+    name=models.CharField(max_length=32,blank=True,verbose_name = '姓名')
     sex_choice = (
         ('male', '男'),
         ('female', '女'),
     )
-    sex = models.CharField(choices=sex_choice, max_length=8,default='male')
-    qq = models.CharField(max_length=64, unique=True,null=True)
-    parent_phone=models.CharField(blank=True,max_length=11)
-    stu_id=models.CharField(blank=True,max_length=128,default='0000000000')
-    school=models.CharField(blank=True,null=True,max_length=128)
+    sex = models.CharField(choices=sex_choice, max_length=8,default='male',verbose_name=' 性别')
+    qq = models.CharField(max_length=64, unique=True,null=True,verbose_name = 'QQ')
+    parent_phone=models.CharField(blank=True,max_length=11,verbose_name = '父母电话')
+    stu_id=models.CharField(blank=True,max_length=128,default='0000000000',verbose_name = '学号')
+    school=models.CharField(blank=True,null=True,max_length=128,verbose_name = '学校')
     source_type=(('qq',u'qq群'),
                  ('school',u'学校转化'),
                  ('ads',u'广告'),
                  ('agent',u'招生代理'),
                  ('others',u'其他'),
                  )
-    source=models.CharField(choices=source_type,default='agent',max_length=32)
+    source=models.CharField(choices=source_type,default='agent',max_length=32,verbose_name = '来源')
 
-    referee=models.ForeignKey('MarketerInfo',on_delete=models.SET_NULL,null=True,default=None)
-    class_id=models.ForeignKey('ClassList',on_delete=models.SET_NULL,null=True)
-    customer_note=models.TextField()
+    referee=models.ForeignKey('MarketerInfo',on_delete=models.SET_NULL,null=True,default=None,verbose_name = '招生人')
+    class_id=models.ForeignKey('ClassList',on_delete=models.SET_NULL,null=True,verbose_name = '班次')
+    notice=models.TextField(verbose_name = '备注')
     status_choices=(
                 ('signed',u'已报名'),
                  ('unregistered',u'未报名'),
                  ('graduated',u'已毕业'),
     )
-    status=models.CharField(choices=status_choices,max_length=64)
-    date=models.DateField(auto_now_add=True)
+    status=models.CharField(choices=status_choices,max_length=64,verbose_name = '状态')
+    join_date=models.DateField(verbose_name = '入学日期')
 
     def __str__(self):
         return "%s(%s)" %(self.qq,self.name)
+    class Meta:
+        verbose_name = '学生信息'
+        verbose_name_plural = '学生信息'
+
+
+
 
 #教师信息
 class TeacherInfo(models.Model):
-    name=models.CharField(max_length=32,blank=False)
+    name=models.CharField(max_length=32,blank=False,verbose_name = '姓名')
     sex_choice=(
         ('male','男'),
         ('female','女'),
     )
     #id=models.CharField(default='000000',blank=False,null=False)
-    sex=models.CharField(choices=sex_choice,max_length=8,default='male')
-    qq = models.CharField(max_length=64, unique=True)
-    phone=models.CharField(blank=True,max_length=11)
-    notice=models.TextField(max_length=512,blank=True)
-    entry_date=models.DateField(auto_now_add=True)
+    sex=models.CharField(choices=sex_choice,max_length=8,default='male',verbose_name = '性别')
+    qq = models.CharField(max_length=64, unique=True,verbose_name = 'QQ')
+    phone=models.CharField(blank=True,max_length=11,verbose_name = '电话')
+    notice=models.TextField(max_length=512,blank=True,verbose_name = '备注')
+    entry_date=models.DateField(auto_now_add=True,verbose_name = '入职时间')
     status_choice=(
         ('signed','在职'),
         ('resigned','离职'),
     )
-    status=models.CharField(choices=status_choice,default='signed',max_length=32)
+    status=models.CharField(choices=status_choice,default='signed',max_length=32,verbose_name = '状态')
     def __str__(self):
         return "%s(%s)" %(self.name,self.status)
+    class Meta:
+        verbose_name = '教师信息'
+        verbose_name_plural = '教师信息'
+
+
+
 
 #市场人员信息
 class MarketerInfo(models.Model):
-    name=models.CharField(max_length=32,blank=False)
+    name=models.CharField(max_length=32,blank=False,verbose_name = '姓名')
     sex_choice=(
         ('male','男'),
         ('female','女'),
     )
     #id=models.CharField(default='000000',blank=False,null=False)
-    sex=models.CharField(choices=sex_choice,max_length=8,default='male')
-    qq = models.CharField(max_length=11, unique=True,blank=True)
-    phone=models.CharField(blank=True,max_length=11)
-    notice=models.TextField(blank=True,max_length=512)
-    entry_date=models.DateField(auto_now_add=True)
+    sex=models.CharField(choices=sex_choice,max_length=8,default='male',verbose_name = '性别')
+    qq = models.CharField(max_length=11, unique=True,blank=True,verbose_name = 'QQ')
+    phone=models.CharField(blank=True,max_length=11,verbose_name = '电话')
+    notice=models.TextField(blank=True,max_length=512,verbose_name = '备注')
+    entry_date=models.DateField(auto_now_add=True,verbose_name = '入职时间')
     status_choice=(
         ('signed','在职'),
         ('resigned','离职'),
     )
-    status=models.CharField(choices=status_choice,default='signed',max_length=32)
+    status=models.CharField(choices=status_choice,default='signed',max_length=32,verbose_name = '状态')
     def __str__(self):
         return "%s(%s)" %(self.name,self.status)
-
+    class Meta:
+        verbose_name = '市场人员'
+        verbose_name_plural = '市场人员'
 
 
 
 
 
 class SchoolInfo(models.Model):
-    name=models.CharField(max_length=32)
-    address=models.CharField(max_length=64,blank=True)
-    phone=models.CharField(max_length=11,blank=True)
-    notice=models.TextField(max_length=512,blank=True)
-
+    name=models.CharField(max_length=32,verbose_name='学校名')
+    address=models.CharField(max_length=64,blank=True,verbose_name='地址')
+    phone=models.CharField(max_length=11,blank=True,verbose_name='电话')
+    notice=models.TextField(max_length=512,blank=True,verbose_name='备注')
+    def __str__(self):
+        return "%s" %(self.name)
+    class Meta:
+        verbose_name = '学校'
+        verbose_name_plural = '学校'
 
 # def getReferee():
 #     r = [('none', '----')]
