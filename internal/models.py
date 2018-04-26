@@ -16,7 +16,7 @@ class Course(models.Model):
     #price=models.IntegerField(default=0)
     #online_price=models.IntegerField(default=0)
     brief = models.TextField(blank=True, verbose_name='简介')
-    notice=models.TextField(blank=True,verbose_name='备注')
+    notice=models.CharField(max_length=128,blank=True,verbose_name='备注')
     def __str__(self):
         return  self.name
     class Meta:
@@ -49,7 +49,7 @@ class ClassList(models.Model):
     start_date=models.DateField(verbose_name='开班日期')
     graduate_date=models.DateField(blank=True,null=True,verbose_name='毕业日期')
     teacher=models.ForeignKey('TeacherInfo',on_delete=models.PROTECT,verbose_name='任课老师')
-    notice=models.TextField(max_length=512,blank=True,verbose_name='备注')
+    notice=models.CharField(max_length=128,blank=True,verbose_name='备注')
     def __str__(self):
        return "%s(%s)" %(self.name,self.course_type)
     class Meta:
@@ -81,7 +81,7 @@ class StuInfo(models.Model):
 
     referee=models.ForeignKey('MarketerInfo',on_delete=models.SET_NULL,null=True,default=None,verbose_name = '招生人')
     class_id=models.ForeignKey('ClassList',on_delete=models.SET_NULL,null=True,verbose_name = '班次')
-    notice=models.TextField(verbose_name = '备注')
+    notice=models.CharField(max_length=128,blank=True,verbose_name = '备注')
     status_choices=(
                 ('signed',u'已报名'),
                  ('unregistered',u'未报名'),
@@ -110,8 +110,8 @@ class TeacherInfo(models.Model):
     sex=models.CharField(choices=sex_choice,max_length=8,default='male',verbose_name = '性别')
     qq = models.CharField(max_length=64, unique=True,verbose_name = 'QQ')
     phone=models.CharField(blank=True,max_length=11,verbose_name = '电话')
-    notice=models.TextField(max_length=512,blank=True,verbose_name = '备注')
-    entry_date=models.DateField(auto_now_add=True,verbose_name = '入职时间')
+    notice=models.CharField(max_length=128,blank=True,verbose_name = '备注')
+    join_date=models.DateField(auto_now_add=True,verbose_name = '入职时间')
     status_choice=(
         ('signed','在职'),
         ('resigned','离职'),
@@ -133,12 +133,11 @@ class MarketerInfo(models.Model):
         ('male','男'),
         ('female','女'),
     )
-    #id=models.CharField(default='000000',blank=False,null=False)
     sex=models.CharField(choices=sex_choice,max_length=8,default='male',verbose_name = '性别')
     qq = models.CharField(max_length=11, unique=True,blank=True,verbose_name = 'QQ')
     phone=models.CharField(blank=True,max_length=11,verbose_name = '电话')
-    notice=models.TextField(blank=True,max_length=512,verbose_name = '备注')
-    entry_date=models.DateField(auto_now_add=True,verbose_name = '入职时间')
+    notice=models.CharField(blank=True,max_length=128,verbose_name = '备注')
+    join_date=models.DateField(verbose_name = '入职时间')
     status_choice=(
         ('signed','在职'),
         ('resigned','离职'),
@@ -158,7 +157,7 @@ class SchoolInfo(models.Model):
     name=models.CharField(max_length=32,verbose_name='学校名')
     address=models.CharField(max_length=64,blank=True,verbose_name='地址')
     phone=models.CharField(max_length=11,blank=True,verbose_name='电话')
-    notice=models.TextField(max_length=512,blank=True,verbose_name='备注')
+    notice=models.CharField(max_length=128,blank=True,verbose_name='备注')
     def __str__(self):
         return "%s" %(self.name)
     class Meta:
