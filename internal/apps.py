@@ -7,7 +7,6 @@ class InternalConfig(AppConfig):
     name = 'internal'
 
 
-
 class SuitConfig(DjangoSuitConfig):    #suit
     layout = 'vertical'
 
