@@ -1,23 +1,17 @@
+import xadmin
 from django.contrib import admin
-# from django.utils.translation import ugettext_lazy
-from internal import models
+from  internal import models
 
-# Register your models here.
-
-# class MyAdminSite(admin.AdminSite):
-#     site_header = 'icoding编程学院'
-
-
-@admin.register(models.StuInfo)
-class stuAdmin(admin.ModelAdmin):
+@xadmin.sites.register(models.StuInfo)
+class stuAdmin(object):
     list_display = ('name','sex','parent_phone','qq','stu_id','status','school','class_id','notice',)
     list_per_page = 50
 #    list_display_links = ('qq', 'school')
     list_editable = ('notice',)
 
 
-@admin.register(models.TeacherInfo)
-class teacherAdmin(admin.ModelAdmin):
+@xadmin.sites.register(models.TeacherInfo)
+class teacherAdmin(object):
     list_display = ('name','sex','phone','qq','join_date','status','notice',)
     list_editable = ('notice',)
     list_per_page = 50
@@ -25,35 +19,35 @@ class teacherAdmin(admin.ModelAdmin):
     list_filter = ('status', 'join_date') #过滤器
     search_fields = ('name', )          #搜索字段
     date_hierarchy = 'join_date'        #详细时间分层筛选
-@admin.register(models.ClassList)
-class classListAdmin(admin.ModelAdmin):
+@xadmin.sites.register(models.ClassList)
+class classListAdmin(object):
     list_display = ('name','course','course_type','is_online','class_hour','capacity','semester','start_date','graduate_date','teacher','notice')
     list_editable = ('notice',)
 
-@admin.register(models.MarketerInfo)
-class marketAdmin(admin.ModelAdmin):
+@xadmin.sites.register(models.MarketerInfo)
+class marketAdmin(object):
     list_display = ('name','sex','phone','qq','join_date','status','notice')
     list_editable = ('notice',)
 
-@admin.register(models.Course)
-class courseAdmin(admin.ModelAdmin):
+@xadmin.sites.register(models.Course)
+class courseAdmin(object):
     list_display = ('name','suit_age','brief','notice')
     list_editable = ('notice',)
 
-@admin.register(models.SchoolInfo)
-class schoolAdmin(admin.ModelAdmin):
+@xadmin.sites.register(models.SchoolInfo)
+class schoolAdmin(object):
     list_display = ('name','address','phone','notice')
     list_editable = ('notice',)
 
-@admin.register(models.ClassRecord)
-class ClassRecordAdmin(admin.ModelAdmin):
+
+@xadmin.sites.register(models.ClassRecord)
+class ClassRecordAdmin(object):
     list_display = ('class_id','start_time','address','which_time','teacher','duration','should_come_num','absentee','notice')
     list_editable = ('notice',)
     ordering = ('-start_time',)
     list_filter = ('teacher', 'class_id') #过滤器
 #    search_fields = ('name', )          #搜索字段
     date_hierarchy = 'start_time'        #详细时间分层筛选
-
 
 
 # class MyAdminSite(admin.AdminSite):         #设置站点信息
