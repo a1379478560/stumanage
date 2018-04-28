@@ -25,7 +25,6 @@ class teacherAdmin(admin.ModelAdmin):
     list_filter = ('status', 'join_date') #过滤器
     search_fields = ('name', )          #搜索字段
     date_hierarchy = 'join_date'        #详细时间分层筛选
-
 @admin.register(models.ClassList)
 class classListAdmin(admin.ModelAdmin):
     list_display = ('name','course','course_type','is_online','class_hour','capacity','semester','start_date','graduate_date','teacher','notice')
@@ -46,14 +45,7 @@ class schoolAdmin(admin.ModelAdmin):
     list_display = ('name','address','phone','notice')
     list_editable = ('notice',)
 
-@admin.register(models.ClassRecord)
-class ClassRecordAdmin(admin.ModelAdmin):
-    list_display = ('class_id','start_time','address','which_time','teacher','duration','should_come_num','absentee','notice')
-    list_editable = ('notice',)
-    ordering = ('-start_time',)
-    list_filter = ('teacher', 'class_id') #过滤器
-#    search_fields = ('name', )          #搜索字段
-    date_hierarchy = 'start_time'        #详细时间分层筛选
+
 
 
 

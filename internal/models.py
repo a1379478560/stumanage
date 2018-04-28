@@ -1,6 +1,5 @@
 from django.db import models
 from django.contrib.auth.models import User
-from .fields import IdField
 # Create your models here.
 
 #课程信息
@@ -21,8 +20,8 @@ class Course(models.Model):
     def __str__(self):
         return  self.name
     class Meta:
-        verbose_name = '课程介绍'
-        verbose_name_plural = verbose_name
+        verbose_name = '课程'
+        verbose_name_plural = '课程'
 
 
 
@@ -54,8 +53,8 @@ class ClassList(models.Model):
     def __str__(self):
        return "%s(%s)" %(self.name,self.course_type)
     class Meta:
-        verbose_name = '开班列表'
-        verbose_name_plural = verbose_name
+        verbose_name = '班次'
+        verbose_name_plural = '班次'
 
 
 
@@ -70,7 +69,7 @@ class StuInfo(models.Model):
     sex = models.CharField(choices=sex_choice, max_length=8,default='male',verbose_name=' 性别')
     qq = models.CharField(max_length=64, unique=True,null=True,verbose_name = 'QQ')
     parent_phone=models.CharField(blank=True,max_length=11,verbose_name = '父母电话')
-    stu_id=IdField(max_length=6,default='000000',verbose_name = '学号')
+    stu_id=models.CharField(blank=True,max_length=128,default='0000000000',verbose_name = '学号')
     school=models.CharField(blank=True,null=True,max_length=128,verbose_name = '学校')
     source_type=(('qq',u'qq群'),
                  ('school',u'学校转化'),
@@ -153,7 +152,7 @@ class MarketerInfo(models.Model):
 
 
 
-#学校信息
+
 class SchoolInfo(models.Model):
     name=models.CharField(max_length=32,verbose_name='学校名')
     address=models.CharField(max_length=64,blank=True,verbose_name='地址')
@@ -162,23 +161,11 @@ class SchoolInfo(models.Model):
     def __str__(self):
         return "%s" %(self.name)
     class Meta:
-        verbose_name = '学校列表'
-        verbose_name_plural = verbose_name
+        verbose_name = '学校'
+        verbose_name_plural = '学校'
 
-
-#上课记录
-class ClassRecord(models.Model):
-    start_time=models.DateTimeField(verbose_name='上课时间')
-    address=models.CharField(max_length=128,verbose_name='上课地点',default='海悦天地')
-    class_id=models.ForeignKey('ClassList',on_delete=models.DO_NOTHING,verbose_name='班次')
-    which_time=models.IntegerField(default=1,verbose_name='第几次课')
-    teacher=models.ForeignKey('TeacherInfo',on_delete=models.DO_NOTHING,verbose_name='上课老师')
-    duration=models.IntegerField(default=2,verbose_name='上课学时')
-    should_come_num=models.IntegerField(verbose_name='应到人数')
-    absentee=models.CharField(blank=True,max_length=128,verbose_name='缺席名单')
-    notice=models.CharField(max_length=128,blank=True,verbose_name='备注')
-    def __str__(self):
-        return "%s上课记录" %self.class_id
-    class Meta:
-        verbose_name='上课记录'
-        verbose_name_plural=verbose_name
+# def getReferee():
+#     r = [('none', '----')]
+#     for obj in MarketerInfo.objects.get().all():
+#         r=r+[(obj.id, obj.name)]
+#     return r
