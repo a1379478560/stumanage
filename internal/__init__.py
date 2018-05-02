@@ -9,4 +9,4 @@ def get_current_app_name(_file):
 
 class InternalConfig(AppConfig):
     name=get_current_app_name(__file__)
-    #verbose_name='内部信息系统'
+    verbose_name='内部信息系统'

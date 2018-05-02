@@ -1,13 +1,29 @@
 import xadmin
+from django.contrib.auth.models import User,Group
 from django.contrib import admin
 from  internal import models
-
-@xadmin.sites.register(models.StuInfo)
+from xadmin import views
+from django.db.models import Q
 class stuAdmin(object):
-    list_display = ('name','sex','parent_phone','qq','stu_id','status','school','class_id','notice',)
+    list_display = ('name','sex','parent_phone','qq','stu_id','status','referee','school','class_id','notice',)
     list_per_page = 50
-#    list_display_links = ('qq', 'school')
     list_editable = ('notice',)
+    def save_models(self):
+        self.new_obj.user = self.request.user
+        super().save_models()
+    def queryset(self):
+        current_user = self.request.user
+        print(current_user.username)
+        qs = super(stuAdmin, self).queryset()
+        if self.request.user.is_superuser:  # 超级用户可查看所有数据
+            return qs
+        elif Group.objects.get(user=current_user).__str__()=='教师':
+            print('教师组')
+            return qs.filter(class_id__teacher__user = current_user)
+        else:
+            return qs.filter(user=self.request.user)
+            #            return qs.filter(Q(user=self.request.user) | Q(class_id.teacher.user=self.request.user))  # user是market Model的user字段
+xadmin.sites.site.register(models.StuInfo, stuAdmin)  #装饰器注册不支持queryset方法，所以必须用这种
 
 
 @xadmin.sites.register(models.TeacherInfo)
@@ -24,10 +40,7 @@ class classListAdmin(object):
     list_display = ('name','course','course_type','is_online','class_hour','capacity','semester','start_date','graduate_date','teacher','notice')
     list_editable = ('notice',)
 
-@xadmin.sites.register(models.MarketerInfo)
-class marketAdmin(object):
-    list_display = ('name','sex','phone','qq','join_date','status','notice')
-    list_editable = ('notice',)
+
 
 @xadmin.sites.register(models.Course)
 class courseAdmin(object):
@@ -37,6 +50,11 @@ class courseAdmin(object):
 @xadmin.sites.register(models.SchoolInfo)
 class schoolAdmin(object):
     list_display = ('name','address','phone','notice')
+    list_editable = ('notice',)
+
+@xadmin.sites.register(models.MarketerInfo)
+class marketAdmin(object):
+    list_display = ('user','name','sex','phone','qq','join_date','status','notice')
     list_editable = ('notice',)
 
 
@@ -61,3 +79,17 @@ class ClassRecordAdmin(object):
 admin.site.site_header = 'ICODING编程学院'
 admin.site.site_title='ICODING编程学院信息管理系统'
 admin.site.index_title='ICODING编程学院'
+
+@xadmin.sites.register(views.BaseAdminView)
+class BaseSetting(object):
+    enable_themes=True
+    use_bootswatch=True
+
+
+@xadmin.sites.register(views.CommAdminView)
+class GlobalSettings(object):
+    site_title='ICODING编程学院'
+    site_footer='ICODING编程学院'
+    menu_style='according' #设置菜单收起功能
+    site_header = 'ICODING编程学院'
+    index_title = 'ICODING编程学院'

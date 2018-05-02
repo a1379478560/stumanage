@@ -42,7 +42,15 @@ INSTALLED_APPS = [
     'xadmin',
     'crispy_forms',
     'reversion',
+    'rules',
+    'import_export',
 ]
+# AUTHENTICATION_BACKENDS = (
+#     'rules.permissions.ObjectPermissionBackend',
+#     'django.contrib.auth.backends.ModelBackend',
+# )
+
+#AUTH_USER_MODEL = 'internal.MarketerInfo'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',

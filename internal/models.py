@@ -62,6 +62,7 @@ class ClassList(models.Model):
 
 #学生信息
 class StuInfo(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, editable=False, null=True)  # 创建该数据的登录用户
     name=models.CharField(max_length=32,blank=True,verbose_name = '姓名')
     sex_choice = (
         ('male', '男'),
@@ -92,7 +93,7 @@ class StuInfo(models.Model):
     join_date=models.DateField(verbose_name = '入学日期')
 
     def __str__(self):
-        return "%s(%s)" %(self.qq,self.name)
+        return "%s" %(self.name)
     class Meta:
         verbose_name = '学生信息'
         verbose_name_plural = '学生信息'
@@ -102,6 +103,7 @@ class StuInfo(models.Model):
 
 #教师信息
 class TeacherInfo(models.Model):
+    user = models.OneToOneField(User, verbose_name='用户名', on_delete=models.CASCADE, null=True)
     name=models.CharField(max_length=32,blank=False,verbose_name = '姓名')
     sex_choice=(
         ('male','男'),
@@ -129,6 +131,7 @@ class TeacherInfo(models.Model):
 
 #市场人员信息
 class MarketerInfo(models.Model):
+    user=models.OneToOneField(User,verbose_name='用户名',on_delete=models.CASCADE,null=True)
     name=models.CharField(max_length=32,blank=False,verbose_name = '姓名')
     sex_choice=(
         ('male','男'),
@@ -149,8 +152,6 @@ class MarketerInfo(models.Model):
     class Meta:
         verbose_name = '市场人员'
         verbose_name_plural = '市场人员'
-
-
 
 
 #学校信息
