@@ -183,3 +183,15 @@ class ClassRecord(models.Model):
     class Meta:
         verbose_name='上课记录'
         verbose_name_plural=verbose_name
+
+
+class uploadRecord(models.Model):
+    #user = models.ForeignKey(User, on_delete=models.CASCADE, editable=False, null=True,verbose_name='上传用户')
+    time=models.DateTimeField(auto_now_add=True,verbose_name='上传时间')
+    notice=models.CharField(blank=True,verbose_name='备注',max_length=128)
+    file=models.FileField(upload_to='internal/upload/',verbose_name='导入文件')
+    def __str__(self):
+        return self.file
+    class Meta:
+        verbose_name='文件上传记录'
+        verbose_name_plural=verbose_name
