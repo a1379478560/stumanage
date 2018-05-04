@@ -8,6 +8,8 @@ import xlrd
 from django.db import transaction
 # Create your views here.
 def upload(request):
+    if not request.user.is_superuser:
+        return HttpResponse('只有超级管理员有权限')
     if request.method == 'GET':
         form_obj = forms.uploadRecordForm()
         return render(request,'upload.html',{'obj':form_obj})
