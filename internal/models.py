@@ -52,7 +52,7 @@ class ClassList(models.Model):
     teacher=models.ForeignKey('TeacherInfo',on_delete=models.PROTECT,verbose_name='任课老师')
     notice=models.CharField(max_length=128,blank=True,verbose_name='备注')
     def __str__(self):
-       return "%s(%s)" %(self.name,self.course_type)
+       return "%s" %(self.name)
     class Meta:
         verbose_name = '开班列表'
         verbose_name_plural = verbose_name
@@ -63,15 +63,15 @@ class ClassList(models.Model):
 #学生信息
 class StuInfo(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, editable=False, null=True)  # 创建该数据的登录用户
-    name=models.CharField(max_length=32,blank=True,verbose_name = '姓名')
+    name=models.CharField(max_length=16,blank=True,verbose_name = '姓名')
     sex_choice = (
         ('male', '男'),
         ('female', '女'),
     )
     sex = models.CharField(choices=sex_choice, max_length=8,default='male',verbose_name=' 性别')
-    qq = models.CharField(max_length=64, unique=True,null=True,verbose_name = 'QQ')
-    parent_phone=models.CharField(blank=True,max_length=11,verbose_name = '父母电话')
-    stu_id=IdField(max_length=6,default='000000',verbose_name = '学号')
+    qq = models.CharField(max_length=64, unique=True,blank=True,verbose_name = 'QQ')
+    parent_phone=models.CharField(blank=True,max_length=18,verbose_name = '家长电话')
+    stu_id=IdField(max_length=6,default='000000',verbose_name = '学号',unique=True)
     school=models.CharField(blank=True,null=True,max_length=128,verbose_name = '学校')
     source_type=(('qq',u'qq群'),
                  ('school',u'学校转化'),
@@ -121,7 +121,7 @@ class TeacherInfo(models.Model):
     )
     status=models.CharField(choices=status_choice,default='signed',max_length=32,verbose_name = '状态')
     def __str__(self):
-        return "%s(%s)" %(self.name,self.status)
+        return "%s" %(self.name)
     class Meta:
         verbose_name = '教师信息'
         verbose_name_plural = '教师信息'
@@ -148,7 +148,7 @@ class MarketerInfo(models.Model):
     )
     status=models.CharField(choices=status_choice,default='signed',max_length=32,verbose_name = '状态')
     def __str__(self):
-        return "%s(%s)" %(self.name,self.status)
+        return "%s" %(self.name)
     class Meta:
         verbose_name = '市场人员'
         verbose_name_plural = '市场人员'
