@@ -72,12 +72,29 @@ class StuInfo(models.Model):
     qq = models.CharField(max_length=64, unique=True,blank=True,verbose_name = 'QQ')
     parent_phone=models.CharField(blank=True,max_length=18,verbose_name = '家长电话')
     stu_id=IdField(max_length=6,default='000000',verbose_name = '学号',unique=True)
+    grade_choice=(
+        (1,'一年级'),
+        (2, '二年级'),
+        (3, '三年级'),
+        (4, '四年级'),
+        (5, '五年级'),
+        (6, '六年级'),
+        (7, '七年级'),
+        (8, '八年级'),
+        (9, '九年级'),
+        (10, '十年级'),
+        (11, '十一年级'),
+        (12, '十二年级'),
+    )
+    grade=models.IntegerField(choices=grade_choice,null=True,verbose_name='年级')
     school=models.CharField(blank=True,null=True,max_length=128,verbose_name = '学校')
     source_type=(('qq',u'qq群'),
                  ('school',u'学校转化'),
                  ('ads',u'广告'),
                  ('agent',u'招生代理'),
                  ('others',u'其他'),
+                 ('wanbao','晚报'),
+                 ('qingnianbao','青年报')
                  )
     source=models.CharField(choices=source_type,default='agent',max_length=32,verbose_name = '来源')
 
@@ -90,6 +107,7 @@ class StuInfo(models.Model):
                  ('graduated',u'已毕业'),
     )
     status=models.CharField(choices=status_choices,max_length=64,verbose_name = '状态')
+    is_paid=models.BooleanField(default=False,verbose_name='是否缴费')
     join_date=models.DateField(verbose_name = '入学日期')
 
     def __str__(self):
@@ -190,6 +208,8 @@ class uploadRecord(models.Model):
     time=models.DateTimeField(auto_now_add=True,verbose_name='上传时间')
     notice=models.CharField(blank=True,verbose_name='备注',max_length=128)
     file=models.FileField(upload_to='internal/upload/',verbose_name='导入文件')
+    created=models.IntegerField(verbose_name='成功创建的记录数',null=True)
+    duplicated=models.IntegerField(null=True,verbose_name='重复数据')
     def __str__(self):
         return self.file
     class Meta:
