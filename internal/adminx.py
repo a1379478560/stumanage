@@ -5,10 +5,10 @@ from  internal import models
 from xadmin import views
 from django.db.models import Q
 class stuAdmin(object):
-    list_display = ('name','sex','parent_phone','is_paid','grade','qq','stu_id','status','referee','school','class_id','notice',)
+    list_display = ('name','sex','parent_phone','is_paid','grade','qq','stu_id','status','referee','school','class_id','join_date','notice',)
     list_per_page = 50
-    list_editable = ('notice',)
-    list_filter = ('status', 'join_date','is_paid','grade') #过滤器
+    list_editable = ('join_date','notice',)
+    list_filter = ('status', 'join_date','is_paid','grade','school') #过滤器
     search_fields = ('name', )          #搜索字段
     date_hierarchy = 'join_date'        #详细时间分层筛选
     def save_models(self):

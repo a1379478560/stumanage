@@ -10,11 +10,13 @@ class IdField(models.CharField):
     # 读取数据库的时候调用这个方法
     def from_db_value(self, value, expression, conn, context):
         if not value:
-            value = '0'*6
+            value = None
         return  value
 
     # 保存数据库的时候调用这个方法
     def get_prep_value(self, value):
+        if value==None:
+            return value
         if len(value)<6:
             return  value.zfill(6)
         return value

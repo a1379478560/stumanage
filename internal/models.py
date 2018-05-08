@@ -69,10 +69,10 @@ class StuInfo(models.Model):
         ('female', '女'),
     )
     sex = models.CharField(choices=sex_choice, max_length=8,default='male',verbose_name=' 性别')
-    qq = models.CharField(max_length=64, unique=True,blank=True,verbose_name = 'QQ')
     parent_phone=models.CharField(blank=True,max_length=18,verbose_name = '家长电话')
-    stu_id=IdField(max_length=6,default='000000',verbose_name = '学号',unique=True)
+    stu_id=IdField(max_length=6,null=True,blank=True,verbose_name = '学号',unique=True)
     grade_choice=(
+        (0,'未知'),
         (1,'一年级'),
         (2, '二年级'),
         (3, '三年级'),
@@ -86,9 +86,13 @@ class StuInfo(models.Model):
         (11, '十一年级'),
         (12, '十二年级'),
     )
-    grade=models.IntegerField(choices=grade_choice,null=True,verbose_name='年级')
-    school=models.CharField(blank=True,null=True,max_length=128,verbose_name = '学校')
+
+    #school=models.CharField(blank=True,null=True,max_length=128,verbose_name = '学校')
+    school=models.ForeignKey('SchoolInfo',blank=True,null=True,on_delete=models.SET_NULL,verbose_name='学校')
+    grade = models.IntegerField(choices=grade_choice, null=True, default=0, verbose_name='年级')
     source_type=(('qq',u'qq群'),
+                 ('ditui','地推'),
+                 ('wechat','微信'),
                  ('school',u'学校转化'),
                  ('ads',u'广告'),
                  ('agent',u'招生代理'),
@@ -96,19 +100,22 @@ class StuInfo(models.Model):
                  ('wanbao','晚报'),
                  ('qingnianbao','青年报')
                  )
-    source=models.CharField(choices=source_type,default='agent',max_length=32,verbose_name = '来源')
+    source=models.CharField(choices=source_type,max_length=32,blank=True,verbose_name = '来源')
 
-    referee=models.ForeignKey('MarketerInfo',on_delete=models.SET_NULL,null=True,default=None,verbose_name = '招生人')
-    class_id=models.ForeignKey('ClassList',on_delete=models.SET_NULL,null=True,verbose_name = '班次')
+    referee=models.ForeignKey('MarketerInfo',on_delete=models.SET_NULL,null=True,blank=True,default=None,verbose_name = '招生人')
+    class_id=models.ForeignKey('ClassList',on_delete=models.SET_NULL,null=True,blank=True,verbose_name = '班次')
+    qq = models.CharField(max_length=64, blank=True, verbose_name='QQ')
+    email=models.EmailField(null=True,blank=True,verbose_name='邮箱')
     notice=models.CharField(max_length=128,blank=True,verbose_name = '备注')
     status_choices=(
-                ('signed',u'已报名'),
-                 ('unregistered',u'未报名'),
-                 ('graduated',u'已毕业'),
+                ('signed','已报名'),
+                 ('unregistered','未报名'),
+                ('booked','已预订'),
+                 ('graduated','已毕业'),
     )
-    status=models.CharField(choices=status_choices,max_length=64,verbose_name = '状态')
+    status=models.CharField(choices=status_choices,max_length=64,default='unregistered',verbose_name = '状态')
     is_paid=models.BooleanField(default=False,verbose_name='是否缴费')
-    join_date=models.DateField(verbose_name = '入学日期')
+    join_date=models.DateField(verbose_name = '登记日期')
 
     def __str__(self):
         return "%s" %(self.name)
