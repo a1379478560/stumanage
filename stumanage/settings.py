@@ -31,7 +31,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
-    'internal.apps.SuitConfig',#suit的配置
+    #'internal.apps.SuitConfig',#suit的配置
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -42,7 +42,7 @@ INSTALLED_APPS = [
     'xadmin',
     'crispy_forms',
     'reversion',
-    'rules',
+    #'rules',
     'import_export',
 ]
 # AUTHENTICATION_BACKENDS = (
