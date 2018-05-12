@@ -6,3 +6,5 @@ class uploadRecordForm(forms.ModelForm):
         model=models.uploadRecord
         #fields='__all__'
         fields=['file','notice',]
+
+

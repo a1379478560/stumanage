@@ -67,9 +67,10 @@ class StuInfo(models.Model):
     sex_choice = (
         ('male', '男'),
         ('female', '女'),
+        ('unknown','未知'),
     )
     sex = models.CharField(choices=sex_choice, max_length=8,default='male',verbose_name=' 性别')
-    parent_phone=models.CharField(blank=True,max_length=18,verbose_name = '家长电话')
+    parent_phone=models.CharField(unique=True,blank=True,max_length=25,verbose_name = '家长电话')
     stu_id=IdField(max_length=6,null=True,blank=True,verbose_name = '学号',unique=True)
     grade_choice=(
         (0,'未知'),
@@ -109,6 +110,7 @@ class StuInfo(models.Model):
     notice=models.CharField(max_length=128,blank=True,verbose_name = '备注')
     status_choices=(
                 ('signed','已报名'),
+                ('yishiting', '已试听'),
                  ('unregistered','未报名'),
                 ('booked','已预订'),
                  ('graduated','已毕业'),

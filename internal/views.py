@@ -1,11 +1,13 @@
 from django.shortcuts import render
 from . import models
 from django.http import  HttpResponse
+from django.db import IntegrityError
+
 from  stumanage.settings import BASE_DIR
 from . import forms
 import time,datetime
 import xlrd
-from django.db import transaction
+from . import function
 # Create your views here.
 def upload(request):
     if not request.user.is_superuser:
@@ -17,10 +19,11 @@ def upload(request):
         form_obj=forms.uploadRecordForm(request.POST,request.FILES)
         # handle_xls(request.FILES['file'].read())
         try:
-            flag=handle_xls(request.FILES['file'].read())   #返回三个值，第一个是出错的行，全部正确则为0。第二个是一共（或者出错前）成功创建的记录数，第三个是数据正确但是重复的条数
+            #flag=handle_xls(request.FILES['file'].read())   #返回三个值，第一个是出错的行，全部正确则为0。第二个是一共（或者出错前）成功创建的记录数，第三个是数据正确但是重复的条数
+            flag=function.handle_xls_5_9(request.FILES['file'].read())
         except xlrd.XLRDError:
             return HttpResponse('文件格式有错误！<br><br><br><a href="upload">继续上传</a>')
-        # except IntegrityError :
+        #except IntegrityError :
         #     return HttpResponse('数据有重复！')
         # except :
         #     return HttpResponse('未知错误！')
@@ -52,7 +55,7 @@ def handle_xls(xlsc_ontent):      # 处理Excel表格
             print(referee)
             class_list=models.ClassList.objects.get(name=str(sheet1.cell(raw,8).value))
 
-            choice={'已报名':'signed','未报名':'unregistered','已毕业':'graduated'}
+            choice={'已报名':'signed','未报名':'unregistered','已毕业':'graduated','已试听':'yishiting'}
             status=choice[sheet1.cell(raw,5).value]
             print(status)
             if sheet1.cell(raw, 7).value=='空':
