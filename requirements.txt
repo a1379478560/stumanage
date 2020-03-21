@@ -49,7 +49,7 @@ tablib==0.12.1
 text-unidecode==1.2
 tzlocal==1.5.1
 unicodecsv==0.14.1
-urllib3==1.22
+urllib3==1.24.2
 xlrd==1.1.0
 XlsxWriter==1.0.4
 xlutils==2.0.0
