@@ -18,7 +18,7 @@ django-pdb==0.6.1
 django-reversion==2.0.13
 django-statici18n==1.7.0
 django-suit==2.0a1
-djangorestframework==3.9.1
+djangorestframework==3.11.2
 et-xmlfile==1.0.1
 factory-boy==2.8.1
 Faker==0.8.13
